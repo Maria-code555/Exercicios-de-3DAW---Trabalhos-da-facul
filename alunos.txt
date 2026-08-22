@@ -1,0 +1,2 @@
+nome;matricula;email;cpf
+maria;1234567890;maria@gmail.com;12345678990
