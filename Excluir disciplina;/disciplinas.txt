@@ -1,0 +1,3 @@
+nome;sigla;carga
+português;port;50
+banco de dados;bdd;40
