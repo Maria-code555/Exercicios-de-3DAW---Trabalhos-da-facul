@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (!file_exists("alunos.txt")) {
 
-        $arqAluno = fopen("alunos.txt", "w") or die("erro ao criar");
+        $arqAluno = fopen("alunos.txt", "w") or die("Erro ao criar!");
 
         $linha = "nome;matricula;email;cpf\n";
 
@@ -46,9 +46,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 
 <body>
-
-    <div class="container">
-
         <h1>Incluir Aluno</h1>
 
         <p class="subtitulo">
@@ -79,10 +76,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <input type="submit" value="incluir Aluno">
 
-        </form>
-    </div>
-   <p><?php echo $msg; ?></p>
+        </form>   
+        <p><?php echo $msg; ?></p>
 
 </body>
-
 </html>
