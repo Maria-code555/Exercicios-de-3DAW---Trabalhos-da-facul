@@ -43,9 +43,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Incluir Aluno</title>
-
-    <link rel="stylesheet" href="estilo.css">
-
 </head>
 
 <body>
@@ -83,16 +80,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <input type="submit" value="incluir Aluno">
 
         </form>
-
-        <?php if (!empty($msg)) { ?>
-
-            <p class="mensagem">
-                <?php echo $msg; ?>
-            </p>
-
-        <?php } ?>
-
     </div>
+   <p><?php echo $msg; ?></p>
 
 </body>
 
