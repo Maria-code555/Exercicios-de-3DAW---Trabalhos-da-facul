@@ -127,7 +127,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') { //(GET)colocar as informações do pro
 
     </form>
 
-    <?php echo "<h1>$msg</h1>";?>
+    <?php echo " $msg";?>
 
     <br>    
 
