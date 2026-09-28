@@ -129,9 +129,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') { //(GET)colocar as informações do pro
 
     <?php echo " $msg";?>
 
-    <br>    
-
-    <a href="listarProfessor.php">Voltar para a listagem de professores</a>
+    <br>   
 
 </body>
 
