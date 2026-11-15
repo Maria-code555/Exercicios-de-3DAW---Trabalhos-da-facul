@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CalculadoraJS</title>
+</head>
+<body>
+
+    <h1>Calculadora</h1>
+
+    <form id="formulario">
+
+        <input type="number" id="num1" required>
+        <br><br>
+
+        <input type="number" id="num2" required>
+        <br><br>
+
+        <select id="operacao">
+            <option value="+">Soma (+)</option>
+            <option value="-">Subtração (-)</option>
+            <option value="*">Multiplicação (*)</option>
+            <option value="/">Divisão (/)</option>
+        </select>
+
+        <br><br>
+
+        <button type="submit">Calcular</button>
+
+    </form>
+
+    <div id="resultado"></div>
+
+    <script>
+
+        document.getElementById("formulario").onsubmit = function(event) {
+            event.preventDefault();//impede da pag recarregar ou mudar
+            enviarCalculo();
+        };
+
+        function enviarCalculo() {
+
+            //pegando os valores digitados
+            let num1 = document.getElementById("num1").value;
+            let num2 = document.getElementById("num2").value;
+            let op = document.getElementById("operacao").value;
+
+            //preparando a comunicação com o php
+            let xhr = new XMLHttpRequest();
+
+            //recebendo a resposta do PHP
+            xhr.onreadystatechange = function() {
+
+                if (xhr.readyState == 4 && xhr.status == 200) {
+
+                    //aqui converte o json recebido
+                    let resposta = JSON.parse(xhr.responseText);
+
+                    //exibindo o resultado
+                    document.getElementById("resultado").innerHTML =
+                        "Resultado: " + resposta.resultado;
+
+                }
+            };
+
+            //organizando os dados
+            let dados = "num1=" + encodeURIComponent(num1) +
+                        "&num2=" + encodeURIComponent(num2) +
+                        "&operacao=" + encodeURIComponent(op);
+
+            //configurando a comunicação com o php
+            xhr.open("POST", "calculadora.php", true);
+
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+            //enviando os dados
+            xhr.send(dados);
+
+        }
+
+    </script>
+
+</body>
+</html>
