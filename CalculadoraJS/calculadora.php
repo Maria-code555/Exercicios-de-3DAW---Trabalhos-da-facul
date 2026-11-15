@@ -1,7 +1,4 @@
 <?php
-//informando q a resposta será em json
-header("Content-Type: application/json; charset=utf-8");
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     //recebendo os dados do js
