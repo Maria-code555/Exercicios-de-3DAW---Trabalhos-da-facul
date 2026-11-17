@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar usuário</title>
+</head>
+<body>
+    <h1>Criar usuários</h1>
+    <p>Preencha os dados do usuário</p>
+
+    <form id="formulario">
+        <label>Nome:</label>
+        <input type="text" id="nome" required>
+
+        <br><br>
+
+        <label>Email:</label>
+        <input type="email" id="email" required>
+
+        <br><br>
+        <button type="button" onclick="enviarCalculo()">Criar usuário</button>
+
+    </form>
+
+    <p id="resultado"></p>
+
+    <a href="listar_usuario.html">Ir para a lista de usuários cadastrados</a>
+
+    <script>
+        function enviarUsuario() {
+            let nome = document.getElementById("nome").value;
+            let email = document.getElementById("email").value;
+            let xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    let resposta = JSON.parse(xhr.responseText);
+                    document.getElementById("resultado").innerHTML = resposta.mensagem;
+                }
+            };
+            let dados = "nome=" + encodeURIComponent(nome) + "&email=" + encodeURIComponent(email);
+            xhr.open("POST", "criar_usuario.php", true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.send(dados);
+        }
+    </script>
+</body>
+</html>
