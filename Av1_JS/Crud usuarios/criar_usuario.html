@@ -36,12 +36,9 @@
                 if (xhr.readyState == 4 && xhr.status == 200) {
                     let resposta = JSON.parse(xhr.responseText);
                     document.getElementById("resultado").textContent = resposta.mensagem;
-                    if (resposta.mensagem == "Pergunta criada com sucesso!!!") {
-                         alert(resposta.mensagem);
-                         location.reload();
+        
                     }
                 }
-            };
             let dados = "nome=" + encodeURIComponent(nome) + "&email=" + encodeURIComponent(email);
             xhr.open("POST", "criar_usuario.php", true);
             xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
