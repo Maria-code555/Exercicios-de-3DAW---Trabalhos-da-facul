@@ -25,17 +25,21 @@
 
     <p id="resultado"></p>
 
-    <a href="listar_usuario.html">Ir para a lista de usuários cadastrados</a>
+    <a href="lista_usuario.html">Ir para a lista de usuários cadastrados</a>
 
     <script>
         function enviarUsuario() {
             let nome = document.getElementById("nome").value;
             let email = document.getElementById("email").value;
             let xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function() {
+              xhr.onreadystatechange = function() {
                 if (xhr.readyState == 4 && xhr.status == 200) {
                     let resposta = JSON.parse(xhr.responseText);
-                    document.getElementById("resultado").innerHTML = resposta.mensagem;
+                    document.getElementById("resultado").textContent = resposta.mensagem;
+                    if (resposta.mensagem == "Pergunta criada com sucesso!!!") {
+                         alert(resposta.mensagem);
+                         location.reload();
+                    }
                 }
             };
             let dados = "nome=" + encodeURIComponent(nome) + "&email=" + encodeURIComponent(email);
