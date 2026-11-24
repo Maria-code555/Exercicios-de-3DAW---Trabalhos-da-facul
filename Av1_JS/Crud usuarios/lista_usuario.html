@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de usuários</title>
+</head>
+<body>
+    <h1>Lista de usuários</h1>
+    <table border="2">
+        <thead>
+            <tr>
+                <th>NOME</th>
+                <th>EMAIL</th>
+                <th>AÇÕES</th>
+            </tr>
+        </thead>
+
+        <tbody id="listaUsuarios"></tbody>
+    </table>
+
+    <br>
+
+    <a href="criar_usuario.html">Criar usuário</a>
+
+    <script>
+        function listarUsuarios() {
+
+            let xhr = new XMLHttpRequest();
+
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+
+                    let usuarios = JSON.parse(xhr.responseText);
+
+                    let tabela = document.getElementById("listaUsuarios");
+
+                    tabela.innerHTML = "";
+
+                    for (let i = 0; i < usuarios.length; i++) {
+
+                        let linha = document.createElement("tr");
+
+                        let colunaNome = document.createElement("td");
+                        colunaNome.textContent = usuarios[i].nome;
+
+                        let colunaEmail = document.createElement("td");
+                        colunaEmail.textContent = usuarios[i].email;
+
+                        let colunaAcoes = document.createElement("td");
+
+                        let alterar = document.createElement("a");
+                        alterar.href = "alterar_usuario.html?nome=" +
+                            encodeURIComponent(usuarios[i].nome);
+                        alterar.textContent = "Alterar";
+
+                        let excluir = document.createElement("a");
+                        excluir.href = "excluir_usuario.html?nome=" +
+                            encodeURIComponent(usuarios[i].nome);
+                        excluir.textContent = "Excluir";
+
+                        colunaAcoes.appendChild(alterar);
+                        colunaAcoes.appendChild(document.createTextNode(" "));
+                        colunaAcoes.appendChild(excluir);
+
+                        linha.appendChild(colunaNome);
+                        linha.appendChild(colunaEmail);
+                        linha.appendChild(colunaAcoes);
+
+                        tabela.appendChild(linha);
+                    }
+                }
+            };
+            xhr.open("GET", "listar_usuario.php", true);
+            xhr.send();
+        }
+        listarUsuarios();
+    </script>
+</body>
+</html>
