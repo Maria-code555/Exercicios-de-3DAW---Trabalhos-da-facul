@@ -1,0 +1,137 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alterar Pergunta</title>
+</head>
+<body>
+    <h1>Alterar pergunta de múltipla escolha</h1>
+
+    <form>
+        <p>Digite o ID da pergunta:</p>
+        <input type="number" id="idBusca" required>
+
+        <button type="button" onclick="buscarPergunta()">Buscar pergunta</button>
+
+    </form>
+
+    <p id="resultado"></p>
+
+    <div id="dadosPergunta" style="display: none;">
+
+        <hr>
+
+        <h2>Dados da pergunta</h2>
+
+        <form>
+
+            <p>ID:</p>
+            <input type="number" id="id" readonly>
+
+            <p>Pergunta:</p>
+            <input type="text" id="pergunta" required>
+
+            <p>Letra A:</p>
+            <input type="text" id="letraA" required>
+
+            <p>Letra B:</p>
+            <input type="text" id="letraB" required>
+
+            <p>Letra C:</p>
+            <input type="text" id="letraC" required>
+
+            <p>Letra D:</p>
+            <input type="text" id="letraD" required>
+
+            <p>Qual é a resposta correta?</p>
+
+            <select id="correta" required>
+                <option value="A">Letra A</option>
+                <option value="B">Letra B</option>
+                <option value="C">Letra C</option>
+                <option value="D">Letra D</option>
+            </select>
+
+            <br><br>
+
+            <button type="button" onclick="alterarPergunta()">Confirmar alteração</button>
+        </form>
+    </div>
+
+    <br>
+
+    <a href="criar_perguntas_multipla_escolha.html">Volte para o criar múltipla escolha</a>
+
+    <br><br>
+
+    <a href="listar_perguntas.html">Veja suas perguntas</a>
+
+    <br><br>
+
+    <a href="listar_uma_pergunta.html">Veja uma pergunta específica</a>
+
+    <script>
+        function buscarPergunta() {
+            let id = document.getElementById("idBusca").value;
+            let xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    let resposta = JSON.parse(xhr.responseText);
+                    document.getElementById("resultado").textContent = resposta.mensagem;
+                    if (resposta.encontrou == true) {
+                        document.getElementById("id").value = resposta.id;
+                        document.getElementById("pergunta").value = resposta.pergunta;
+                        document.getElementById("letraA").value = resposta.letraA;
+                        document.getElementById("letraB").value = resposta.letraB;
+                        document.getElementById("letraC").value = resposta.letraC;
+                        document.getElementById("letraD").value = resposta.letraD;
+                        document.getElementById("correta").value = resposta.correta;
+
+                        document.getElementById("dadosPergunta").style.display = "block";
+                    } else {
+                        document.getElementById("dadosPergunta").style.display = "none";
+                    }
+                }
+            };
+            let dados = "buscar=1&id=" + encodeURIComponent(id);
+            xhr.open("POST", "alterar_multipla.php", true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.send(dados);
+        }
+        function alterarPergunta() {
+            let id = document.getElementById("id").value;
+            let pergunta = document.getElementById("pergunta").value;
+            let letraA = document.getElementById("letraA").value;
+            let letraB = document.getElementById("letraB").value;
+            let letraC = document.getElementById("letraC").value;
+            let letraD = document.getElementById("letraD").value;
+            let correta = document.getElementById("correta").value;
+
+            let xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    let resposta = JSON.parse(xhr.responseText);
+                    document.getElementById("resultado").textContent = resposta.mensagem;
+                    if (resposta.alterou == true) {
+                        alert(resposta.mensagem);
+                        location.reload();
+                    }
+                }
+            };
+            let dados = "alterar=1&id=" + encodeURIComponent(id) +
+                        "&pergunta=" + encodeURIComponent(pergunta) +
+                        "&letraA=" + encodeURIComponent(letraA) +
+                        "&letraB=" + encodeURIComponent(letraB) +
+                        "&letraC=" + encodeURIComponent(letraC) +
+                        "&letraD=" + encodeURIComponent(letraD) +
+                        "&correta=" + encodeURIComponent(correta);
+
+            xhr.open("POST", "alterar_multipla.php", true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.send(dados);
+        }
+    </script>
+</body>
+</html>
