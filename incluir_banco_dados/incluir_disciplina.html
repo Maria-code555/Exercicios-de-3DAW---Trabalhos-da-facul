@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Incluir Disciplina</title>
+</head>
+<body>
+
+    <h1>Incluir Disciplina</h1>
+
+    <form id="formulario">
+
+        Sigla:
+        <input type="text" id="sigla" maxlength="10">
+        <br><br>
+
+        Nome:
+        <input type="text" id="nome" maxlength="100">
+        <br><br>
+
+        Carga horária:
+        <input type="number" id="carga_horaria" min="1">
+        <br><br>
+
+        <button type="button" onclick="incluirDisciplina()">
+            Incluir
+        </button>
+
+    </form>
+
+    <p id="resultado"></p>
+
+    <script>
+        function incluirDisciplina() {
+            let sigla = document.getElementById("sigla").value;
+            let nome = document.getElementById("nome").value;
+            let carga_horaria = document.getElementById("carga_horaria").value;
+
+            let xhr = new XMLHttpRequest();
+
+            xhr.onreadystatechange = function() {
+
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    let resposta = JSON.parse(xhr.responseText);
+                    document.getElementById("resultado").textContent = resposta.mensagem;
+                    if (resposta.incluiu == true) {
+                        document.getElementById("formulario").reset();
+                    }
+                }
+            };
+
+            xhr.open("POST", "incluir_disciplina.php", true);
+
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+            let dados = "sigla=" + encodeURIComponent(sigla) +
+                        "&nome=" + encodeURIComponent(nome) +
+                        "&carga_horaria=" + encodeURIComponent(carga_horaria);
+            xhr.send(dados);
+        }
+    </script>
+</body>
+</html>
