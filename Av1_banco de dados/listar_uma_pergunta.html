@@ -1,0 +1,147 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Listar uma Pergunta</title>
+</head>
+<body>
+
+    <h1>Listar uma Pergunta</h1>
+
+    <h2>Pergunta de Múltipla Escolha</h2>
+
+    <form>
+
+        ID
+        <input type="number" id="idMultipla" required>
+
+        <button type="button" onclick="buscarMultipla()">Buscar pergunta</button>
+
+    </form>
+
+    <p id="resultadoMultipla"></p>
+
+    <div id="dadosMultipla" style="display: none;">
+
+        <h3>Pergunta encontrada:</h3>
+
+        <p><b>ID:</b> <span id="multiplaId"></span></p>
+
+        <p><b>Pergunta:</b> <span id="multiplaPergunta"></span></p>
+
+        <p><b>Letra A:</b> <span id="letraA"></span></p>
+
+        <p><b>Letra B:</b> <span id="letraB"></span></p>
+
+        <p><b>Letra C:</b> <span id="letraC"></span></p>
+
+        <p><b>Letra D:</b> <span id="letraD"></span></p>
+
+        <p><b>Resposta correta:</b> <span id="correta"></span></p>
+
+    </div>
+
+    <hr>
+
+    <h2>Pergunta de Texto</h2>
+
+    <form>
+
+        ID
+        <input type="number" id="idTexto" required>
+
+        <button type="button" onclick="buscarTexto()">Buscar pergunta</button>
+
+    </form>
+
+    <p id="resultadoTexto"></p>
+
+    <div id="dadosTexto" style="display: none;">
+
+        <h3>Pergunta encontrada:</h3>
+
+        <p><b>ID:</b> <span id="textoId"></span></p>
+
+        <p><b>Pergunta:</b> <span id="textoPergunta"></span></p>
+
+        <p><b>Resposta:</b> <span id="textoResposta"></span></p>
+
+    </div>
+
+    <br>
+
+    <a href="perguntas_texto.html">Criar pergunta de texto</a>
+
+    <br><br>
+
+    <a href="criar_perguntas_multipla_escolha.html">Criar pergunta de múltipla escolha</a>
+
+    <br><br>
+
+    <a href="alterar_multipla.html">Altere sua pergunta de múltipla escolha</a>
+
+    <br><br>
+
+    <a href="alterar_texto.html">Altere sua pergunta dissertativa</a>
+
+    <br><br>
+
+    <a href="listar_perguntas.html">Veja todas as perguntas</a>
+
+    <script>
+        // BUSCAR PERGUNTA DE MÚLTIPLA ESCOLHA
+        function buscarMultipla() {
+            let id = document.getElementById("idMultipla").value;
+            let xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    let resposta = JSON.parse(xhr.responseText);
+                    document.getElementById("resultadoMultipla").textContent = resposta.mensagem;
+                    if (resposta.encontrou == true) {
+                        document.getElementById("multiplaId").textContent = resposta.id;
+                        document.getElementById("multiplaPergunta").textContent = resposta.pergunta;
+                        document.getElementById("letraA").textContent = resposta.letraA;
+                        document.getElementById("letraB").textContent = resposta.letraB;
+                        document.getElementById("letraC").textContent = resposta.letraC;
+                        document.getElementById("letraD").textContent = resposta.letraD;
+                        document.getElementById("correta").textContent = resposta.correta;
+                        document.getElementById("dadosMultipla").style.display = "block";
+                    } else {
+                        document.getElementById("dadosMultipla").style.display = "none";
+                    }
+                }
+            };
+            let dados = "buscarMultipla=1&idMultipla=" + encodeURIComponent(id);
+            xhr.open("POST", "listar_uma_pergunta.php", true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.send(dados);
+        }
+        // BUSCAR PERGUNTA DE TEXTO
+        function buscarTexto() {
+            let id = document.getElementById("idTexto").value;
+            let xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    let resposta = JSON.parse(xhr.responseText);
+                    document.getElementById("resultadoTexto").textContent = resposta.mensagem;
+                    if (resposta.encontrou == true) {
+                        document.getElementById("textoId").textContent = resposta.id;
+                        document.getElementById("textoPergunta").textContent = resposta.pergunta;
+                        document.getElementById("textoResposta").textContent = resposta.respostaTexto;
+
+                        document.getElementById("dadosTexto").style.display = "block";
+
+                    } else {
+                        document.getElementById("dadosTexto").style.display = "none";
+                    }
+                }
+            };
+            let dados = "buscarTexto=1&idTexto=" + encodeURIComponent(id);
+            xhr.open("POST", "listar_uma_pergunta.php", true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.send(dados);
+        }
+    </script>
+</body>
+</html>

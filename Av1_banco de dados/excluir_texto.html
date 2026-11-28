@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excluir Pergunta de Texto</title>
+</head>
+<body>
+
+    <h1>Excluir Pergunta de Texto</h1>
+
+    <form>
+
+        <h3>Insira o ID da pergunta para excluir</h3>
+
+        ID
+        <input type="number" id="idBusca" required>
+
+        <button type="button" onclick="buscarPergunta()">Buscar pergunta</button>
+
+    </form>
+
+    <p id="resultado"></p>
+
+    <div id="dadosPergunta" style="display: none;">
+
+        <hr>
+
+        <h3>Confira os dados antes de excluir:</h3>
+
+        <p>ID: <span id="id"></span></p>
+
+        <p>Pergunta: <span id="pergunta"></span></p>
+
+        <p>Resposta: <span id="resposta"></span></p>
+
+        <input type="hidden" id="idExcluir">
+
+        <button type="button" onclick="excluirPergunta()">Confirmar exclusão</button>
+
+    </div>
+
+    <br>
+
+    <a href="perguntas_texto.html">Criar pergunta de texto</a>
+
+    <br><br>
+
+    <a href="criar_perguntas_multipla_escolha.html">Criar pergunta de múltipla escolha</a>
+
+    <br><br>
+
+    <a href="listar_perguntas.html">Veja suas perguntas</a>
+
+    <br><br>
+
+    <a href="listar_uma_pergunta.html">Veja uma pergunta específica</a>
+
+    <br><br>
+
+    <a href="excluir_multipla.html">Excluir pergunta de múltipla escolha</a>
+
+    <script>
+        //BUSCAR PERGUNTA
+        function buscarPergunta() {
+
+            let id = document.getElementById("idBusca").value;
+
+            let xhr = new XMLHttpRequest();
+
+            xhr.onreadystatechange = function() {
+
+                if (xhr.readyState == 4 && xhr.status == 200) {
+
+                    let resposta = JSON.parse(xhr.responseText);
+
+                    document.getElementById("resultado").textContent = resposta.mensagem;
+
+                    if (resposta.encontrou == true) {
+
+                        document.getElementById("id").textContent = resposta.id;
+                        document.getElementById("pergunta").textContent = resposta.pergunta;
+                        document.getElementById("resposta").textContent = resposta.respostaTexto;
+
+                        document.getElementById("idExcluir").value = resposta.id;
+
+                        document.getElementById("dadosPergunta").style.display = "block";
+
+                    } else {
+                        document.getElementById("dadosPergunta").style.display = "none";
+                    }
+                }
+            };
+            let dados = "buscar=1&id=" + encodeURIComponent(id);
+
+            xhr.open("POST", "excluir_texto.php", true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.send(dados);
+        }
+        //EXCLUIR PERGUNTA
+        function excluirPergunta() {
+            let id = document.getElementById("idExcluir").value;
+            if (confirm("Tem certeza que deseja excluir esta pergunta?")) {
+                let xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        let resposta = JSON.parse(xhr.responseText);
+
+                        document.getElementById("resultado").textContent = resposta.mensagem;
+
+                        if (resposta.excluiu == true) {
+                            alert(resposta.mensagem);
+                            location.reload();
+                        }
+                    }
+                };
+                let dados = "excluir=1&id=" + encodeURIComponent(id);
+                
+                xhr.open("POST", "excluir_texto.php", true);
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhr.send(dados);
+            }
+        }
+    </script>
+</body>
+</html>
