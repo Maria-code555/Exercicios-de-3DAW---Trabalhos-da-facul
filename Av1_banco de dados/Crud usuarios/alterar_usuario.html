@@ -1,0 +1,105 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alterar usuário</title>
+</head>
+<body>
+    <h1>Alterar usuário</h1>
+    <form>
+        <h3>Insira o nome do usuário que deseja alterar</h3>
+
+        <label>Nome:</label>
+        <input type="text" id="nomeBusca" required>
+
+        <button type="button" onclick="buscarUsuario()">Buscar usuário</button>
+    </form>
+
+    <p id="resultado"></p>
+
+    <div id="dadosUsuario" style="display: none;">
+        <hr>
+        <form>
+            <h3>Insira os dados para alterar o usuário</h3>
+
+            <input type="hidden" id="nomeAntigo">
+
+            <label>Nome:</label>
+            <input type="text" id="nome" required>
+
+            <br><br>
+
+            <label>Email:</label>
+            <input type="email" id="email" required>
+
+            <br><br>
+
+            <button type="button" onclick="alterarUsuario()">Confirmar alteração</button>
+        </form>
+    </div>
+
+    <br>
+
+    <a href="lista_usuario.html">Voltar para a listagem de usuários</a>
+
+    <br><br>
+
+    <a href="criar_usuario.html">Voltar para criar usuários</a>
+
+    <script>
+        function buscarUsuario() {
+            let nome = document.getElementById("nomeBusca").value;
+            let xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    let resposta = JSON.parse(xhr.responseText);
+                    document.getElementById("resultado").textContent = resposta.mensagem;
+                    if (resposta.encontrou == true) {
+                        document.getElementById("nomeAntigo").value = resposta.nome;
+                        document.getElementById("nome").value = resposta.nome;
+                        document.getElementById("email").value = resposta.email;
+                        document.getElementById("dadosUsuario").style.display = "block";
+                    } else {
+                        document.getElementById("dadosUsuario").style.display = "none";
+                    }
+                }
+            };
+            let dados = "buscar=1&nome=" + encodeURIComponent(nome);
+            xhr.open("POST", "alterar_usuario.php", true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.send(dados);
+        }
+        function alterarUsuario() {
+            let nomeAntigo = document.getElementById("nomeAntigo").value;
+            let nome = document.getElementById("nome").value;
+            let email = document.getElementById("email").value;
+            let xhr = new XMLHttpRequest();
+
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    let resposta = JSON.parse(xhr.responseText);
+                    document.getElementById("resultado").textContent = resposta.mensagem;
+                    if (resposta.alterou == true) {
+                        document.getElementById("dadosUsuario").style.display = "none";
+                    }
+                }
+            };
+            let dados = "alterar=1" +
+                        "&nomeAntigo=" + encodeURIComponent(nomeAntigo) +
+                        "&nome=" + encodeURIComponent(nome) +
+                        "&email=" + encodeURIComponent(email);
+            xhr.open("POST", "alterar_usuario.php", true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.send(dados);
+        }
+        let parametros = new URLSearchParams(window.location.search);
+
+        if (parametros.has("nome")) {
+            document.getElementById("nomeBusca").value = parametros.get("nome");
+            buscarUsuario();
+        }
+    </script>
+</body>
+</html>

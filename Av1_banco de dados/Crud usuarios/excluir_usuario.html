@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excluir usuário</title>
+</head>
+<body>
+    <h1>Excluir usuário</h1>
+
+    <form>
+        <h3>Insira o nome do usuário que deseja excluir</h3>
+
+        <label>Nome:</label>
+        <input type="text" id="nomeBusca" required>
+
+        <button type="button" onclick="buscarUsuario()">Buscar usuário</button>
+    </form>
+
+    <p id="resultado"></p>
+    <div id="dadosUsuario" style="display: none;">
+        <hr>
+        <h3>Confira os dados antes de excluir:</h3>
+        <p>Nome: <span id="nome"></span></p>
+        <p>Email: <span id="email"></span></p>
+        <input type="hidden" id="nomeExcluir">
+
+        <button type="button" onclick="excluirUsuario()">Confirmar exclusão</button>
+
+    </div>
+
+    <br>
+
+    <a href="lista_usuario.html">Voltar para a lista de usuários</a>
+
+    <br><br>
+
+    <a href="criar_usuario.html">Voltar para criar usuários</a>
+
+    <script>
+        function buscarUsuario() {
+            let nome = document.getElementById("nomeBusca").value;
+            let xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    let resposta = JSON.parse(xhr.responseText);
+                    document.getElementById("resultado").textContent = resposta.mensagem;
+                    if (resposta.encontrou == true) {
+                        document.getElementById("nome").textContent = resposta.nome;
+                        document.getElementById("email").textContent = resposta.email;
+                        document.getElementById("nomeExcluir").value = resposta.nome;
+                        document.getElementById("dadosUsuario").style.display = "block";
+                    } else {
+                        document.getElementById("dadosUsuario").style.display = "none";
+                    }
+                }
+            };
+            let dados = "buscar=1&nome=" + encodeURIComponent(nome);
+            xhr.open("POST", "excluir_usuario.php", true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.send(dados);
+        }
+        function excluirUsuario() {
+            let nome = document.getElementById("nomeExcluir").value;
+            let xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    let resposta = JSON.parse(xhr.responseText);
+                    document.getElementById("resultado").textContent = resposta.mensagem;
+                    if (resposta.excluiu == true) {
+                        document.getElementById("dadosUsuario").style.display = "none";
+                        document.getElementById("nomeBusca").value = "";
+                    }
+                }
+            };
+            let dados = "excluir=1&nome=" + encodeURIComponent(nome);
+
+            xhr.open("POST", "excluir_usuario.php", true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.send(dados);
+        }
+        let parametros = new URLSearchParams(window.location.search);
+        if (parametros.has("nome")) {
+            document.getElementById("nomeBusca").value = parametros.get("nome");
+            buscarUsuario();
+        }
+    </script>
+</body>
+</html>
